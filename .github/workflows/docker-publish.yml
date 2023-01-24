@@ -39,7 +39,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ env.RIAK_VERSION }}
+            type=raw,value=${{ env.RIAK_VERSION }}-sha-{{ sha }}
 
       - name: Build and push Docker image
         id: build-and-push
