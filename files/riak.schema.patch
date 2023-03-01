@@ -1,0 +1,18 @@
+--- priv/riak.schema.orig	2023-03-01 15:38:54.733223673 +0400
++++ priv/riak.schema	2023-03-01 15:58:16.673602387 +0400
+@@ -74,6 +74,7 @@
+       undefined -> [];
+       ErrorFilename -> [{lager_file_backend, [{file, ErrorFilename},
+                                               {level, error},
++                                              {formatter, lager_logstash_formatter},
+                                               {size, 10485760},
+                                               {date, "$D0"},
+                                               {count, 5}]}]
+@@ -85,6 +86,7 @@
+     ConsoleHandler = {lager_console_backend, ConsoleLogLevel},
+     ConsoleFileHandler = {lager_file_backend, [{file, ConsoleLogFile},
+                                                {level, ConsoleLogLevel},
++                                               {formatter, lager_logstash_formatter},
+                                                {size, 10485760},
+                                                {date, "$D0"},
+                                                {count, 5}]},

@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils \
 
 ARG RIAK_VERSION
 
-COPY files/install-riak.sh files/vars.config /
+COPY files/install-riak.sh files/vars.config files/rebar.config.patch files/rebar.lock.patch files/riak.schema.patch /
 RUN /install-riak.sh
 
 # Install custom hooks
