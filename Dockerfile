@@ -1,4 +1,4 @@
-FROM erlang:22 as build
+FROM --platform=$BUILDPLATFORM erlang:22 as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
