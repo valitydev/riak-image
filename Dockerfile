@@ -18,6 +18,7 @@ COPY files/poststart.d /tmp/portage-root/etc/riak/poststart.d
 # Install custom start script
 COPY files/riak-cluster.sh /tmp/portage-root/riak-cluster.sh
 
+
 #####################################################################
 # Riak image
 FROM erlang:22-slim
