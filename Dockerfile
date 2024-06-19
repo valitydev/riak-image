@@ -34,7 +34,7 @@ COPY --chown=102:102 --from=build /tmp/portage-root/ /
 COPY --from=build /opt/riak/_build/deb/rel/riak/lib /usr/lib/riak/lib
 COPY --from=build /opt/riak/_build/deb/rel/riak/share /usr/lib/riak/share
 COPY --from=build /opt/riak/_build/deb/rel/riak/releases /usr/lib/riak/releases
-COPY --from=build /opt/riak/_build/deb/rel/riak/erts-10.7.2.18 /usr/lib/riak/erts-10.7.2.18
+COPY --from=build /opt/riak/_build/deb/rel/riak/erts-10.7.2.19 /usr/lib/riak/erts-10.7.2.19
 COPY --from=build /opt/riak/_build/deb/rel/riak/bin /usr/lib/riak/bin
 COPY --chown=102:102 --from=build /opt/riak/_build/deb/rel/riak/etc/* /etc/riak/
 COPY --chown=102:102 --from=build /opt/riak/_build/deb/rel/riak/data/* /var/lib/riak/data/
