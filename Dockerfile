@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils \
     curl apt-transport-https ca-certificates git \
-    locales sudo patch make wget cmake g++ build-essential libpam0g-dev 
+    locales sudo patch make wget cmake g++ build-essential libpam0g-dev
 
 ARG RIAK_VERSION
 
@@ -26,14 +26,14 @@ FROM erlang:22-slim
 # Create riak user/group
 RUN adduser --uid 102 --gecos riak --disabled-password --home /var/lib/riak riak && \
     mkdir -p /var/log/riak && \
-    chown -R 102:102 /var/log/riak 
+    chown -R 102:102 /var/log/riak
 
 # Copy riak sources
 COPY --chown=102:102 --from=build /tmp/portage-root/ /
 COPY --from=build /opt/riak/_build/deb/rel/riak/lib /usr/lib/riak/lib
 COPY --from=build /opt/riak/_build/deb/rel/riak/share /usr/lib/riak/share
 COPY --from=build /opt/riak/_build/deb/rel/riak/releases /usr/lib/riak/releases
-COPY --from=build /opt/riak/_build/deb/rel/riak/erts-10.7.2.18 /usr/lib/riak/erts-10.7.2.18
+COPY --from=build /opt/riak/_build/deb/rel/riak/erts-10.7.2.19 /usr/lib/riak/erts-10.7.2.19
 COPY --from=build /opt/riak/_build/deb/rel/riak/bin /usr/lib/riak/bin
 COPY --chown=102:102 --from=build /opt/riak/_build/deb/rel/riak/etc/* /etc/riak/
 COPY --chown=102:102 --from=build /opt/riak/_build/deb/rel/riak/data/* /var/lib/riak/data/
