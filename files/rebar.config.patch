@@ -1,5 +1,5 @@
---- a/rebar.config
-+++ b/rebar.config
+--- rebar.config
++++ rebar.config
 @@ -10,8 +10,9 @@
          {cluster_info, {git, "https://github.com/basho/cluster_info", {branch, "develop"}}},
          {riak_kv, {git, "https://github.com/basho/riak_kv", {branch, "develop"}}},

@@ -1,5 +1,5 @@
---- a/rebar.lock
-+++ b/rebar.lock
+--- rebar.lock
++++ rebar.lock
 @@ -50,6 +50,7 @@
    {git,"https://github.com/basho/ibrowse.git",
         {ref,"cdde6fe5e80ce71e7b5570e40a45d9f862721499"}},

@@ -1,9 +1,9 @@
---- a/priv/riak.schema
-+++ b/priv/riak.schema
+--- priv/riak.schema
++++ priv/riak.schema
 @@ -6,63 +6,33 @@
    {datatype, {enum, [debug, info, notice, warning, error, critical, alert, emergency, none]}}
  ]}.
-
+ 
 -%% @doc Format string for the messages emitted to default log. The string is passed into
 -%% the handler as a logger_formatter template, the format is a list containing strings
 -%% and atoms. The atoms denote the keys for retrieving metadata from the logger events.
@@ -18,14 +18,14 @@
 -  {datatype, file}
 -]}.
 -
--%% @doc With log rotation enabled, this decides the maximum number of log
+-%% @doc With log rotation enabled, this decides the maximum number of log 
 -%% files to store.
 -{mapping, "logger.max_files", "kernel.logger", [
 -  {default, 10},
 -  {datatype, integer}
 -]}.
 -
--%% @doc The maximum size of a single log file. Total size used for log files will
+-%% @doc The maximum size of a single log file. Total size used for log files will 
 -%% be max_file_size * max_files.
 -{mapping, "logger.max_file_size", "kernel.logger", [
 -  {default, "1MB"},
@@ -55,7 +55,7 @@
 -    ConfigMap0 = #{config => #{file => LogFile,
 -                              max_no_bytes => MaxNumBytes,
 -                              max_no_files => MaxNumFiles},
--                  formatter => {logger_formatter,
+-                  formatter => {logger_formatter, 
 -                                    #{template => DefaultFormatTerm}
 -                               }
 -                 },
@@ -82,8 +82,8 @@
 +    ConfigMap0 = #{config => LoggerConfig,
 +                   %% See https://github.com/valitydev/logger_logstash_formatter
 +                   formatter => {logger_logstash_formatter, FormatterConfig}},
-
+ 
      [{handler, default, logger_std_h, ConfigMap0}]
--
+-    
    end
  }.
