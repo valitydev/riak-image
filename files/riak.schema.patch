@@ -1,18 +1,89 @@
---- priv/riak.schema.orig	2023-03-01 15:38:54.733223673 +0400
-+++ priv/riak.schema	2023-03-01 15:58:16.673602387 +0400
-@@ -74,6 +74,7 @@
-       undefined -> [];
-       ErrorFilename -> [{lager_file_backend, [{file, ErrorFilename},
-                                               {level, error},
-+                                              {formatter, lager_logstash_formatter},
-                                               {size, 10485760},
-                                               {date, "$D0"},
-                                               {count, 5}]}]
-@@ -85,6 +86,7 @@
-     ConsoleHandler = {lager_console_backend, ConsoleLogLevel},
-     ConsoleFileHandler = {lager_file_backend, [{file, ConsoleLogFile},
-                                                {level, ConsoleLogLevel},
-+                                               {formatter, lager_logstash_formatter},
-                                                {size, 10485760},
-                                                {date, "$D0"},
-                                                {count, 5}]},
+--- priv/riak.schema
++++ priv/riak.schema
+@@ -6,63 +6,33 @@
+   {datatype, {enum, [debug, info, notice, warning, error, critical, alert, emergency, none]}}
+ ]}.
+ 
+-%% @doc Format string for the messages emitted to default log. The string is passed into
+-%% the handler as a logger_formatter template, the format is a list containing strings
+-%% and atoms. The atoms denote the keys for retrieving metadata from the logger events.
+-%% More information on default metadata can be found here (https://www.erlang.org/doc/man/logger_formatter.html#type-template).
+-{mapping, "logger.format", "kernel.logger", [
+-  {default, "[time,\" [\",level,\"] \",pid,\"@\",mfa,\":\",line,\" \",msg,\"\\n\"]."}
+-]}.
+-
+-%% @doc Filename to use for log files.
+-{mapping, "logger.file", "kernel.logger", [
+-  {default, "$(platform_log_dir)/console.log"},
+-  {datatype, file}
+-]}.
+-
+-%% @doc With log rotation enabled, this decides the maximum number of log 
+-%% files to store.
+-{mapping, "logger.max_files", "kernel.logger", [
+-  {default, 10},
+-  {datatype, integer}
+-]}.
+-
+-%% @doc The maximum size of a single log file. Total size used for log files will 
+-%% be max_file_size * max_files.
+-{mapping, "logger.max_file_size", "kernel.logger", [
+-  {default, "1MB"},
+-  {datatype, bytesize}
+-]}.
+-
+ {translation,
+  "kernel.logger",
+  fun(Conf) ->
+-    LogFile = cuttlefish:conf_get("logger.file", Conf),
+-    MaxNumBytes = cuttlefish:conf_get("logger.max_file_size", Conf),
+-    MaxNumFiles = cuttlefish:conf_get("logger.max_files", Conf),
+-
+-    DefaultFormatStr = cuttlefish:conf_get("logger.format", Conf),
+-    DefaultFormatTerm =
+-        case erl_scan:string(DefaultFormatStr) of
+-            {ok, DefaultTokens, _} ->
+-                case erl_parse:parse_term(DefaultTokens) of
+-                    {ok, DefaultTerm} ->
+-                        DefaultTerm;
+-                    {error, {_, _, DefaultError}} ->
+-                        cuttlefish:error(foo)
+-                end;
+-            {error, {_, _, DefaultScanError}} ->
+-                cuttlefish:error(foo)
+-        end,
+-    ConfigMap0 = #{config => #{file => LogFile,
+-                              max_no_bytes => MaxNumBytes,
+-                              max_no_files => MaxNumFiles},
+-                  formatter => {logger_formatter, 
+-                                    #{template => DefaultFormatTerm}
+-                               }
+-                 },
++    %% See https://www.erlang.org/doc/apps/kernel/logger_handler#t:olp_config/0
++    LoggerConfig =#{type => standard_io,
++                    sync_mode_qlen => 5000,
++                    drop_mode_qlen => 5000,
++                    flush_qlen => 10000,
++                    %% We want almost all logs
++                    burst_limit_enable => false},
++
++    FormatterConfig = #{
++      log_level_map => #{emergency => 'ERROR',
++                         alert => 'ERROR',
++                         critical => 'ERROR',
++                         error => 'ERROR',
++                         warning => 'WARN',
++                         notice => 'INFO',
++                         info => 'INFO',
++                         debug => 'DEBUG'}
++    },
++
++    %% See https://www.erlang.org/doc/apps/kernel/logger_std_h.html
++    ConfigMap0 = #{config => LoggerConfig,
++                   %% See https://github.com/valitydev/logger_logstash_formatter
++                   formatter => {logger_logstash_formatter, FormatterConfig}},
+ 
+     [{handler, default, logger_std_h, ConfigMap0}]
+-    
+   end
+ }.
