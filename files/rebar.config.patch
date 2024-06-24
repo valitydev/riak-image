@@ -1,13 +1,13 @@
---- rebar.config
-+++ rebar.config
-@@ -10,8 +10,9 @@
-         {cluster_info, {git, "https://github.com/basho/cluster_info", {branch, "develop"}}},
-         {riak_kv, {git, "https://github.com/basho/riak_kv", {branch, "develop"}}},
-         {riak_auth_mods, {git, "https://github.com/basho/riak_auth_mods", {branch, "develop"}}},
--        {riak_repl, {git, "https://github.com/basho/riak_repl", {branch, "develop"}}}
--
-+        {riak_repl, {git, "https://github.com/basho/riak_repl", {branch, "develop"}}},
+--- rebar.config.orig	2024-06-24 14:04:31
++++ rebar.config	2024-06-24 14:05:05
+@@ -9,7 +9,9 @@
+ {deps, [
+         {riak_kv, {git, "https://github.com/nhs-riak/riak_kv", {branch, "nhse-develop"}}},
+         {riak_auth_mods, {git, "https://github.com/nhs-riak/riak_auth_mods", {branch, "nhse-develop"}}},
+-        {riak_repl, {git, "https://github.com/nhs-riak/riak_repl", {branch, "nhse-develop"}}}
++        {riak_repl, {git, "https://github.com/nhs-riak/riak_repl", {branch, "nhse-develop"}}},
 +        {logger_logstash_formatter,
 +            {git, "https://github.com/valitydev/logger_logstash_formatter.git", {ref, "08a66a6"}}}
-         % {riaknostic, {git, "https://github.com/basho/riaknostic", {branch, "develop"}}}
        ]}.
+ 
+ {project_plugins, [
