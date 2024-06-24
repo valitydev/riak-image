@@ -1,6 +1,6 @@
---- priv/riak.schema
-+++ priv/riak.schema
-@@ -6,63 +6,33 @@
+--- priv/riak.schema.origin	2024-06-24 16:21:55
++++ priv/riak.schema	2024-06-24 16:27:03
+@@ -6,64 +6,29 @@
    {datatype, {enum, [debug, info, notice, warning, error, critical, alert, emergency, none]}}
  ]}.
  
@@ -38,7 +38,9 @@
 -    LogFile = cuttlefish:conf_get("logger.file", Conf),
 -    MaxNumBytes = cuttlefish:conf_get("logger.max_file_size", Conf),
 -    MaxNumFiles = cuttlefish:conf_get("logger.max_files", Conf),
--
++    %% See https://www.erlang.org/doc/apps/kernel/logger_handler#t:olp_config/0
++    LoggerConfig =#{type => standard_io},
+ 
 -    DefaultFormatStr = cuttlefish:conf_get("logger.format", Conf),
 -    DefaultFormatTerm =
 -        case erl_scan:string(DefaultFormatStr) of
@@ -59,14 +61,6 @@
 -                                    #{template => DefaultFormatTerm}
 -                               }
 -                 },
-+    %% See https://www.erlang.org/doc/apps/kernel/logger_handler#t:olp_config/0
-+    LoggerConfig =#{type => standard_io,
-+                    sync_mode_qlen => 5000,
-+                    drop_mode_qlen => 5000,
-+                    flush_qlen => 10000,
-+                    %% We want almost all logs
-+                    burst_limit_enable => false},
-+
 +    FormatterConfig = #{
 +      log_level_map => #{emergency => 'ERROR',
 +                         alert => 'ERROR',
@@ -77,13 +71,14 @@
 +                         info => 'INFO',
 +                         debug => 'DEBUG'}
 +    },
-+
+ 
 +    %% See https://www.erlang.org/doc/apps/kernel/logger_std_h.html
 +    ConfigMap0 = #{config => LoggerConfig,
 +                   %% See https://github.com/valitydev/logger_logstash_formatter
 +                   formatter => {logger_logstash_formatter, FormatterConfig}},
- 
++
      [{handler, default, logger_std_h, ConfigMap0}]
 -    
    end
  }.
+ 
