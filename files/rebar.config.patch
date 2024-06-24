@@ -1,20 +1,13 @@
---- rebar.config.orig	2023-03-01 15:38:23.497209722 +0400
-+++ rebar.config	2023-03-01 15:42:59.569322130 +0400
-@@ -17,7 +17,8 @@
- 
-         % {yokozuna, {git, "https://github.com/basho/yokozuna.git", {branch, "develop-3.0"}}},
- 
--        {riak_repl, {git, "https://github.com/basho/riak_repl.git", {tag, "riak_kv-3.0.12"}}}
-+        {riak_repl, {git, "https://github.com/basho/riak_repl.git", {tag, "riak_kv-3.0.12"}}},
-+        {lager_logstash_formatter, ".*", {git, "https://github.com/rbkmoney/lager_logstash_formatter.git", {branch, "riak-2.9"}}}
+--- a/rebar.config
++++ b/rebar.config
+@@ -10,8 +10,9 @@
+         {cluster_info, {git, "https://github.com/basho/cluster_info", {branch, "develop"}}},
+         {riak_kv, {git, "https://github.com/basho/riak_kv", {branch, "develop"}}},
+         {riak_auth_mods, {git, "https://github.com/basho/riak_auth_mods", {branch, "develop"}}},
+-        {riak_repl, {git, "https://github.com/basho/riak_repl", {branch, "develop"}}}
+-
++        {riak_repl, {git, "https://github.com/basho/riak_repl", {branch, "develop"}}},
++        {logger_logstash_formatter,
++            {git, "https://github.com/valitydev/logger_logstash_formatter.git", {ref, "08a66a6"}}}
+         % {riaknostic, {git, "https://github.com/basho/riaknostic", {branch, "develop"}}}
        ]}.
- 
- {project_plugins, [
-@@ -51,6 +52,7 @@
-      stdlib,
-      lager,
-      lager_syslog,
-+     lager_logstash_formatter,
-      sasl,
-      public_key,
-      ssl,
