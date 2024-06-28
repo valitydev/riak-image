@@ -1,18 +1,51 @@
---- priv/riak.schema.origin	2024-06-28 13:14:00
-+++ priv/riak.schema	2024-06-28 13:14:25
-@@ -11,7 +11,14 @@
+--- priv/riak.schema.origin	2024-06-28 14:44:19
++++ priv/riak.schema	2024-06-28 14:54:04
+@@ -11,9 +11,11 @@
  %% and atoms. The atoms denote the keys for retrieving metadata from the logger events.
  %% More information on default metadata can be found here (https://www.erlang.org/doc/man/logger_formatter.html#type-template).
  {mapping, "logger.format", "kernel.logger", [
 -  {default, "[time,\" [\",level,\"] \",pid,\"@\",mfa,\":\",line,\" \",msg,\"\\n\"]."}
-+  {default, [
-+    "{\"time\": \"", time, "\", ",
-+    "\"level\": \"", level, "\", ",
-+    "\"pid\": \"", pid, "\", ",
-+    "\"mfa\": \"", mfa, "\", ",
-+    "\"line\": ", line, ", ",
-+    "\"msg\": \"", msg, "\"}\n"
-+  ]}
++  {default, "{\"time\": \"~s\", \"level\": \"~s\", \"pid\": \"~p\", \"mfa\": \"~p\", \"line\": \"~p\", \"msg\": \"~s\"}"},
++  {datatype, string}
  ]}.
 
++
  %% @doc Filename to use for log files.
+ {mapping, "logger.file", "kernel.logger", [
+   {default, "$(platform_log_dir)/console.log"},
+\ No newline at end of file
+@@ -42,31 +44,19 @@
+     MaxNumFiles = cuttlefish:conf_get("logger.max_files", Conf),
+
+     DefaultFormatStr = cuttlefish:conf_get("logger.format", Conf),
+-    DefaultFormatTerm =
+-        case erl_scan:string(DefaultFormatStr) of
+-            {ok, DefaultTokens, _} ->
+-                case erl_parse:parse_term(DefaultTokens) of
+-                    {ok, DefaultTerm} ->
+-                        DefaultTerm;
+-                    {error, {_, _, DefaultError}} ->
+-                        cuttlefish:error(foo)
+-                end;
+-            {error, {_, _, DefaultScanError}} ->
+-                cuttlefish:error(foo)
+-        end,
+     ConfigMap0 = #{config => #{file => LogFile,
+                               max_no_bytes => MaxNumBytes,
+                               max_no_files => MaxNumFiles},
+                   formatter => {logger_formatter,
+-                                    #{template => DefaultFormatTerm}
++                                    #{template => DefaultFormatStr}
+                                }
+                  },
+
+     [{handler, default, logger_std_h, ConfigMap0}]
+-
+   end
+ }.
+
++
+ %% @doc Cookie for distributed node communication.  All nodes in the
+ %% same cluster should use the same cookie or they will not be able to
+ %% communicate.
+\ No newline at end of file
