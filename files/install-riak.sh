@@ -5,7 +5,7 @@ set -e eu
 mkdir -p /opt/riak && cd /opt/riak
 curl -L https://github.com/nhs-riak/riak/archive/refs/tags/riak-${RIAK_VERSION}-nhse.tar.gz -o /opt/riak.tar.gz
 tar xvf /opt/riak.tar.gz --strip-components 1
-patch -p0 < /riak.schema.patch
+# patch -p0 < /riak.schema.patch
 # patch < /rebar.config.patch
 # patch < /rebar.lock.patch
 make all
