@@ -18,6 +18,7 @@ COPY files/poststart.d /tmp/portage-root/etc/riak/poststart.d
 # Install custom start script
 COPY files/riak-cluster.sh /tmp/portage-root/riak-cluster.sh
 
+
 #####################################################################
 # Riak image
 FROM erlang:22-slim
@@ -26,7 +27,9 @@ FROM erlang:22-slim
 # Create riak user/group
 RUN adduser --uid 102 --gecos riak --disabled-password --home /var/lib/riak riak && \
     mkdir -p /var/log/riak && \
-    chown -R 102:102 /var/log/riak
+    chown -R 102:102 /var/log/riak && \
+    apt-get update && \
+    apt-get install -y sudo
 
 # Copy riak sources
 COPY --chown=102:102 --from=build /tmp/portage-root/ /
