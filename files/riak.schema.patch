@@ -1,5 +1,5 @@
-+++ riak.schema.origin	2024-06-28 12:50:20
---- riak.schema	2024-06-28 12:50:20
+--- priv/riak.schema.origin	2024-06-28 13:14:00
++++ priv/riak.schema	2024-06-28 13:14:25
 @@ -11,7 +11,14 @@
  %% and atoms. The atoms denote the keys for retrieving metadata from the logger events.
  %% More information on default metadata can be found here (https://www.erlang.org/doc/man/logger_formatter.html#type-template).
