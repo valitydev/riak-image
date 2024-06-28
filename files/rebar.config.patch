@@ -1,20 +1,13 @@
---- rebar.config.orig	2023-03-01 15:38:23.497209722 +0400
-+++ rebar.config	2023-03-01 15:42:59.569322130 +0400
-@@ -17,7 +17,8 @@
- 
-         % {yokozuna, {git, "https://github.com/basho/yokozuna.git", {branch, "develop-3.0"}}},
- 
--        {riak_repl, {git, "https://github.com/basho/riak_repl.git", {tag, "riak_kv-3.0.12"}}}
-+        {riak_repl, {git, "https://github.com/basho/riak_repl.git", {tag, "riak_kv-3.0.12"}}},
-+        {lager_logstash_formatter, ".*", {git, "https://github.com/rbkmoney/lager_logstash_formatter.git", {branch, "riak-2.9"}}}
+--- rebar.config.orig	2024-06-24 14:04:31
++++ rebar.config	2024-06-24 14:05:05
+@@ -9,7 +9,9 @@
+ {deps, [
+         {riak_kv, {git, "https://github.com/nhs-riak/riak_kv", {branch, "nhse-develop"}}},
+         {riak_auth_mods, {git, "https://github.com/nhs-riak/riak_auth_mods", {branch, "nhse-develop"}}},
+-        {riak_repl, {git, "https://github.com/nhs-riak/riak_repl", {branch, "nhse-develop"}}}
++        {riak_repl, {git, "https://github.com/nhs-riak/riak_repl", {branch, "nhse-develop"}}},
++        {logger_logstash_formatter,
++            {git, "https://github.com/valitydev/logger_logstash_formatter.git", {ref, "08a66a6"}}}
        ]}.
  
  {project_plugins, [
-@@ -51,6 +52,7 @@
-      stdlib,
-      lager,
-      lager_syslog,
-+     lager_logstash_formatter,
-      sasl,
-      public_key,
-      ssl,
