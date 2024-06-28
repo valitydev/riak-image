@@ -39,7 +39,7 @@ done
 
 sleep 10
 
-$RIAK start &
+$RIAK daemon &
 
 sleep 40
 
@@ -50,3 +50,5 @@ if [[ -z "$($RIAK_ADMIN cluster status | egrep $COORDINATOR_NODE)" && "$COORDINA
   riak admin cluster plan
   riak admin cluster commit
 fi
+
+tail -n 1024 -F /var/log/riak/console.log
