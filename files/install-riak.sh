@@ -9,5 +9,5 @@ patch -p0 < /riak.schema.patch
 patch < /rebar.config.patch
 patch < /rebar.lock.patch
 make all
-./rebar3 as deb release
+./rebar3 as deb release --overlay_vars /vars.config
 ls -la /opt/riak/_build/deb/rel/riak
