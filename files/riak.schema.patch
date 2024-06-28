@@ -1,84 +1,18 @@
---- priv/riak.schema.origin	2024-06-24 16:21:55
-+++ priv/riak.schema	2024-06-24 16:27:03
-@@ -6,64 +6,29 @@
-   {datatype, {enum, [debug, info, notice, warning, error, critical, alert, emergency, none]}}
- ]}.
- 
--%% @doc Format string for the messages emitted to default log. The string is passed into
--%% the handler as a logger_formatter template, the format is a list containing strings
--%% and atoms. The atoms denote the keys for retrieving metadata from the logger events.
--%% More information on default metadata can be found here (https://www.erlang.org/doc/man/logger_formatter.html#type-template).
--{mapping, "logger.format", "kernel.logger", [
+--- riak.schema.origin	2024-06-28 12:50:20
++++ riak.schema	2024-06-28 12:50:20
+@@ -11,7 +11,14 @@
+ %% and atoms. The atoms denote the keys for retrieving metadata from the logger events.
+ %% More information on default metadata can be found here (https://www.erlang.org/doc/man/logger_formatter.html#type-template).
+ {mapping, "logger.format", "kernel.logger", [
 -  {default, "[time,\" [\",level,\"] \",pid,\"@\",mfa,\":\",line,\" \",msg,\"\\n\"]."}
--]}.
--
--%% @doc Filename to use for log files.
--{mapping, "logger.file", "kernel.logger", [
--  {default, "$(platform_log_dir)/console.log"},
--  {datatype, file}
--]}.
--
--%% @doc With log rotation enabled, this decides the maximum number of log 
--%% files to store.
--{mapping, "logger.max_files", "kernel.logger", [
--  {default, 10},
--  {datatype, integer}
--]}.
--
--%% @doc The maximum size of a single log file. Total size used for log files will 
--%% be max_file_size * max_files.
--{mapping, "logger.max_file_size", "kernel.logger", [
--  {default, "1MB"},
--  {datatype, bytesize}
--]}.
--
- {translation,
-  "kernel.logger",
-  fun(Conf) ->
--    LogFile = cuttlefish:conf_get("logger.file", Conf),
--    MaxNumBytes = cuttlefish:conf_get("logger.max_file_size", Conf),
--    MaxNumFiles = cuttlefish:conf_get("logger.max_files", Conf),
-+    %% See https://www.erlang.org/doc/apps/kernel/logger_handler#t:olp_config/0
-+    LoggerConfig =#{type => standard_io},
- 
--    DefaultFormatStr = cuttlefish:conf_get("logger.format", Conf),
--    DefaultFormatTerm =
--        case erl_scan:string(DefaultFormatStr) of
--            {ok, DefaultTokens, _} ->
--                case erl_parse:parse_term(DefaultTokens) of
--                    {ok, DefaultTerm} ->
--                        DefaultTerm;
--                    {error, {_, _, DefaultError}} ->
--                        cuttlefish:error(foo)
--                end;
--            {error, {_, _, DefaultScanError}} ->
--                cuttlefish:error(foo)
--        end,
--    ConfigMap0 = #{config => #{file => LogFile,
--                              max_no_bytes => MaxNumBytes,
--                              max_no_files => MaxNumFiles},
--                  formatter => {logger_formatter, 
--                                    #{template => DefaultFormatTerm}
--                               }
--                 },
-+    FormatterConfig = #{
-+      log_level_map => #{emergency => 'ERROR',
-+                         alert => 'ERROR',
-+                         critical => 'ERROR',
-+                         error => 'ERROR',
-+                         warning => 'WARN',
-+                         notice => 'INFO',
-+                         info => 'INFO',
-+                         debug => 'DEBUG'}
-+    },
- 
-+    %% See https://www.erlang.org/doc/apps/kernel/logger_std_h.html
-+    ConfigMap0 = #{config => LoggerConfig,
-+                   %% See https://github.com/valitydev/logger_logstash_formatter
-+                   formatter => {logger_logstash_formatter, FormatterConfig}},
-+
-     [{handler, default, logger_std_h, ConfigMap0}]
--    
-   end
- }.
- 
++  {default, [
++    "{\"time\": \"", time, "\", ",
++    "\"level\": \"", level, "\", ",
++    "\"pid\": \"", pid, "\", ",
++    "\"mfa\": \"", mfa, "\", ",
++    "\"line\": ", line, ", ",
++    "\"msg\": \"", msg, "\"}\n"
++  ]}
+ ]}.
+
+ %% @doc Filename to use for log files.
