@@ -11,3 +11,20 @@
        ]}.
  
  {project_plugins, [
+@@ -41,6 +43,7 @@
+ {relx, [{release, {riak, "3.2.2-nhse"},
+     [kernel,
+      stdlib,
++     logger_logstash_formatter,
+      public_key,
+      ssl,
+      exometer_core,
+@@ -164,7 +167,7 @@
+ 
+   {deb,
+    [{relx,
+-     [{overlay_vars, "rel/pkg/deb/vars.config"},
++     [{overlay_vars, "/vars.config"},
+       {overlay,
+        [{template, "rel/files/riak", "usr/bin/riak"}
+        ]},
